@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru-UA">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Weather</title>
+    <style>
+        body{
+    background-color:wheat;
+}
+.hidden{
+    display: none;
+}
+#inp-submit{
+    background-color: lightseagreen;
+    color: white;
+}
+#inp-text{
+    background-color: white;
+    color: lightseagreen;
+}
+header{
+    margin: 25px 35px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+.head{
+    color:lightseagreen;
+    font-size: 24px;
+    font-weight: bold;
+}
+.turner{
+    height: 32px;
+    background-color: lightseagreen;
+    margin: 0;
+}
+.menu{
+    display: flex;
+    padding-left: 35px;
+}
+.menu-item{
+    color: #fff;
+    margin-right: 20px;
+    padding: 5px 15px;
+    padding-bottom: 0;
+    height: 25px;
+    font-size: 18px;
+}
+.menu-item:hover{
+    border: 1px solid grey;
+    cursor: pointer;
+    border-bottom: 2px solid rgb(255, 255, 255);
+}
+.selected{
+    border-bottom: 2px solid rgb(255, 255, 255);
+}
+.container{
+    background-color: rgba(255, 255, 255);
+    margin: 35px;
+}
+.content{
+    padding: 20px;
+}
+.heading{
+    color: lightseagreen;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+.curr-forecast{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+.curr-temperature{
+    font-weight: bold;
+    font-size: 34px;
+}
+.hourly-forecast{
+    margin: 25px;
+}
+.hourly-cont{
+    display: flex;
+    justify-content: space-evenly;
+}
+.border-text{
+    border-bottom: 1px solid rgba(201, 199, 199, 0.4);
+}
+.border-text > div{
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+.near-weather{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+}
+.near-info{
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(228, 227, 227, 0.7);
+    margin: 5px;
+    padding: 10px;
+    width: 200px;
+}
+#forecast{
+    display: flex;
+    justify-content: space-evenly;
+}
+.text-margin{
+    margin-top: 15px;
+}
+.error{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(247, 243, 243, .75);
+}
+#text-error{
+    margin: 15px;
+    font-size: 26px;
+    color: lightseagreen;
+}
+.five-day-block{
+    display: flex;
+    justify-content: center;
+    margin: 35px;
+}
+.five-day-content{
+    margin: 5px;
+    margin-top: 25px;
+    background-color: #ebebeb;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    padding: 20px;
+}
+.five-day-content:hover{
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#day{
+    color: lightseagreen;
+    font-size: 18px;
+    font-weight: bold;
+}
+#date{
+    color: grey;
+}
+#temp-five{
+    font-weight: bold;
+    font-size: 22px;
+}
+#forecast-five{
+    color: grey
+}
+.selected-five{
+    background-color: #fff;
+}
+.hidden{
+    display: none;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="head">MY WEATHER</div>
+        <div class="search">
+            <input id="inp-text" type="search" placeholder="Change city">
+            <input id="inp-submit" type="submit" value="Find">
+        </div>
+    </header>
+    <main>
+        <div class="turner">
+            <div class="menu" id="menu">
+                <div class="menu-item today selected" id="today">Today</div>
+                <div class="menu-item 5-day" id="5-day">5-day forecast</div>
+            </div>
+        </div>
+        <div class="error hidden">
+            <img id="img-error" src="" alt="">
+            <div id="text-error"></div>
+            <div id="text-error"></div>
+        </div>
+        <div class="today-main">
+            <div class="container">
+                <div class="content">
+                    <div class="heading">
+                        <div>CURRENT WEATHER</div>
+                        <div class="date"></div>
+                    </div>
+                    <div class="curr-forecast">
+                        <div>
+                            <img id="img-forecast" src="" alt="">
+                            <div class="forecast"></div>
+                        </div>
+                        <div>
+                            <div class="curr-temperature"></div>
+                            <div class="curr-real-feel"></div>
+                        </div>
+                        <div>
+                            <div id="sunrise"></div>
+                            <div id="sunset"></div>
+                            <div id="duration"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="content">
+                    <div class="heading">
+                        <div>HOURLY</div>
+                    </div>
+                    <div class="hourly-forecast">
+                        <div class="hourly-cont">
+                            <div>Today</div>
+                            <div id="time"></div>
+                            <div id="time"></div>
+                            <div id="time"></div>
+                            <div id="time"></div>
+                            <div id="time"></div>
+                        </div>
+                        <div class="hourly-cont" style="margin-left: 16%;">
+                            
+                            <img id="icon" src="" alt="">
+                            <img id="icon" src="" alt="">
+                            <img id="icon" src="" alt="">
+                            <img id="icon" src="" alt="">
+                            <img id="icon" src="" alt="">
+                        </div>
+                        <div class="hourly-cont border-text">
+                            <div style="opacity: .6;">Forecast</div>
+                            <div class="fore-text"></div>
+                            <div class="fore-text"></div>
+                            <div class="fore-text"></div>
+                            <div class="fore-text"></div>
+                            <div class="fore-text"></div>
+                        </div>
+                        <div class="hourly-cont border-text" style="margin-left: -15px;">
+                            <div style="opacity: .6; ">Temp (&deg;C)</div>
+                            <div class="temp-hourly"></div>
+                            <div class="temp-hourly"></div>
+                            <div class="temp-hourly"></div>
+                            <div class="temp-hourly"></div>
+                            <div class="temp-hourly"></div>
+                        </div>
+                        <div class="hourly-cont border-text" style="margin-left: -15px;">
+                            <div style="opacity: .6;">Real feel</div>
+                            <div id="temp-real-feel"></div>
+                            <div id="temp-real-feel"></div>
+                            <div id="temp-real-feel"></div>
+                            <div id="temp-real-feel"></div>
+                            <div id="temp-real-feel"></div>
+                        </div>
+                        <div class="hourly-cont" style="margin-left: -5px;">
+                            <div style="opacity: .6;">Wind (km/h)</div>
+                            <div id="wind"></div>
+                            <div id="wind"></div>
+                            <div id="wind"></div>
+                            <div id="wind"></div>
+                            <div id="wind"></div>
+                        </div>
+                </div>
+            </div>
+            </div>
+            <div class="container">
+                <div class="content">
+                    <div class="heading">
+                        <div>NEARBY PLACES</div>
+                    </div>
+                    <div class="near-weather">
+                        <div class="near-info">
+                            <div id="city" class="text-margin"></div>
+                            <div id="forecast">
+                                <img id="weath-img-near"></img>
+                                <div id="temp-near" class="text-margin"></div>
+                            </div>
+                        </div>
+                        <div class="near-info">
+                            <div id="city" class="text-margin"></div>
+                            <div id="forecast">
+                                <img id="weath-img-near"></img>
+                                <div id="temp-near" class="text-margin"></div>
+                            </div>
+                        </div>
+                        <div class="near-info">
+                            <div id="city" class="text-margin"></div>
+                            <div id="forecast">
+                                <img id="weath-img-near"></img>
+                                <div id="temp-near" class="text-margin"></div>
+                            </div>
+                        </div>
+                        <div class="near-info">
+                            <div id="city" class="text-margin"></div>
+                            <div id="forecast">
+                                <img id="weath-img-near"></img>
+                                <div id="temp-near" class="text-margin"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="five-day-main hidden">
+            <div class="five-day-block">
+                <div class="five-day-content selected-five">
+                    <div id="day"></div>
+                    <div id="date"></div>
+                    <img src="" alt="" id="ic">
+                    <div id="temp-five"></div>
+                    <div id="forecast-five"></div>
+                </div>
+                <div class="five-day-content">
+                    <div id="day"></div>
+                    <div id="date"></div>
+                    <img src="" alt="" id="ic">
+                    <div id="temp-five"></div>
+                    <div id="forecast-five"></div>
+                </div>
+                <div class="five-day-content">
+                    <div id="day"></div>
+                    <div id="date"></div>
+                    <img src="" alt="" id="ic">
+                    <div id="temp-five"></div>
+                    <div id="forecast-five"></div>
+                </div>
+                <div class="five-day-content">
+                    <div id="day"></div>
+                    <div id="date"></div>
+                    <img src="" alt="" id="ic">
+                    <div id="temp-five"></div>
+                    <div id="forecast-five"></div>
+                </div>
+                <div class="five-day-content">
+                    <div id="day"></div>
+                    <div id="date"></div>
+                    <img src="" alt="" id="ic">
+                    <div id="temp-five"></div>
+                    <div id="forecast-five"></div>
+                </div>
+            </div>
+            <div class="container" >
+                <div class="content">
+                    <div class="heading">
+                        <div>HOURLY</div>
+                    </div>
+                    <div class="hourly-forecast">
+                        <div class="hourly-cont">
+                            <div class="hourly-day"></div>
+                            <div class="time"></div>
+                            <div class="time"></div>
+                            <div class="time"></div>
+                            <div class="time"></div>
+                            <div class="time"></div>
+                        </div>
+                        <div class="hourly-cont" style="margin-left: 16%;">
+                            
+                            <img class="icon" src="" alt="">
+                            <img class="icon" src="" alt="">
+                            <img class="icon" src="" alt="">
+                            <img class="icon" src="" alt="">
+                            <img class="icon" src="" alt="">
+                        </div>
+                        <div class="hourly-cont border-text">
+                            <div style="opacity: .6;">Forecast</div>
+                            <div id="fore-text"></div>
+                            <div id="fore-text"></div>
+                            <div id="fore-text"></div>
+                            <div id="fore-text"></div>
+                            <div id="fore-text"></div>
+                        </div>
+                        <div class="hourly-cont border-text" style="margin-left: -15px;">
+                            <div style="opacity: .6; ">Temp (&deg;C)</div>
+                            <div id="temp-hourly"></div>
+                            <div id="temp-hourly"></div>
+                            <div id="temp-hourly"></div>
+                            <div id="temp-hourly"></div>
+                            <div id="temp-hourly"></div>
+                        </div>
+                        <div class="hourly-cont border-text" style="margin-left: -15px;">
+                            <div style="opacity: .6;">Real feel</div>
+                            <div class="temp-real-feel"></div>
+                            <div class="temp-real-feel"></div>
+                            <div class="temp-real-feel"></div>
+                            <div class="temp-real-feel"></div>
+                            <div class="temp-real-feel"></div>
+                        </div>
+                        <div class="hourly-cont" style="margin-left: -5px;">
+                            <div style="opacity: .6;">Wind (km/h)</div>
+                            <div class="wind"></div>
+                            <div class="wind"></div>
+                            <div class="wind"></div>
+                            <div class="wind"></div>
+                            <div class="wind"></div>
+                        </div>
+                </div>
+            </div>
+            </div>
+        
+        </div>
+    </main>
+    <script src="/main.bundle.js"></script>
+</body>
+</html>
